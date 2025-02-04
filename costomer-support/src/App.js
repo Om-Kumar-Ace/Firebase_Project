@@ -1,24 +1,38 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState, useEffect } from 'react';
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import { auth } from './Firebase';
+import Login from './pages/Login';
+import Dashboard from './pages/Dashboard';
+import { getRole } from './utils/auth';
 
 function App() {
+  const [user, setUser] = useState(null);
+  const [role, setRole] = useState(null);
+
+  useEffect(() => {
+    auth.onAuthStateChanged(async (user) => {
+      if (user) {
+        setUser(user);
+        const userRole = await getRole(user.uid);
+        setRole(userRole);
+      } else {
+        setUser(null);
+        setRole(null);
+      }
+    });
+  }, []);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Router>
+      <Switch>
+        <Route path="/login">
+          <Login />
+        </Route>
+        <Route path="/dashboard">
+          {role === 'customer' ? <CustomerDashboard /> : role === 'agent' ? <AgentDashboard /> : <Login />}
+        </Route>
+      </Switch>
+    </Router>
   );
 }
 
