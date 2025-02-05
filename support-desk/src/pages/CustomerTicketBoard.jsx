@@ -70,7 +70,7 @@ const CustomerTicketEditor = () => {
               className="p-3 cursor-pointer hover:bg-violet-200 rounded-md mb-2"
               onClick={() => handleSelectTicket(ticket)}
             >
-              {ticket.title} - <span className="font-semibold">{ticket.status}</span>
+              {ticket.title}  <span className="font-semibold">{ticket.status}</span>
             </li>
           ))}
         </ul>
@@ -100,8 +100,6 @@ const CustomerTicketEditor = () => {
             onChange={handleChange}
             className="w-full p-2 border rounded-md mb-4"
           />
-          
-          
 
           <button
             onClick={handleUpdate}
