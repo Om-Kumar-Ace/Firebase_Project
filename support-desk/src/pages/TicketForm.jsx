@@ -3,13 +3,9 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import { db } from "../firebaseConfig";
 import { collection, addDoc, Timestamp } from "firebase/firestore";
-import { useNavigate } from "react-router-dom"; // useNavigate hook from React Router v6
 
 const TicketForm = () => {
-  const [file, setFile] = useState(null); // For file upload
-  const navigate = useNavigate(); // Use navigate hook for navigation
-  
-  // Formik form and validation schema
+  const [file, setFile] = useState(null);
   const formik = useFormik({
     initialValues: {
       title: "",
@@ -23,8 +19,6 @@ const TicketForm = () => {
       dueDate: "",
       isUrgent: false,
       isAccepted: false,
-      status: "in progress",  // Default status
-      assigning: "in progress",  // Default assigning
     },
     validationSchema: Yup.object({
       title: Yup.string().required("Title is required"),
@@ -40,7 +34,6 @@ const TicketForm = () => {
     }),
     onSubmit: async (values) => {
       try {
-        // Add document to Firestore with timestamp and new fields
         const docRef = await addDoc(collection(db, "tickets"), {
           title: values.title,
           description: values.description,
@@ -53,17 +46,11 @@ const TicketForm = () => {
           dueDate: values.dueDate,
           isUrgent: values.isUrgent,
           isAccepted: values.isAccepted,
-          status: values.status,  // New status field
-          assigning: values.assigning,  // New assigning field
-          timestamp: Timestamp.now(), // Adding timestamp
+          timestamp: Timestamp.now(), 
         });
 
         console.log("Ticket added with ID: ", docRef.id);
         alert("Ticket created successfully!");
-
-        // Redirect to dashboard after submission
-        navigate("/dashboard"); // Using navigate for redirecting
-
       } catch (e) {
         console.error("Error adding document: ", e);
         alert("Failed to create ticket.");
@@ -77,7 +64,7 @@ const TicketForm = () => {
   };
 
   return (
-    <div className="p-6 bg-white rounded-lg shadow-md w-96 mx-auto h-[600px] overflow-y-auto">
+    <div className="p-6 bg-gradient-to-r from-white to-violet-100 rounded-lg shadow-md w-96 mx-auto h-[600px] overflow-y-auto">
       <h2 className="text-2xl font-semibold mb-4">Create a Ticket</h2>
 
       <form onSubmit={formik.handleSubmit}>
@@ -96,7 +83,6 @@ const TicketForm = () => {
           {formik.touched.title && formik.errors.title ? <div className="text-red-500">{formik.errors.title}</div> : null}
         </div>
 
-        {/* Description Field */}
         <div className="mb-4">
           <label htmlFor="description" className="block">Description</label>
           <textarea
@@ -111,7 +97,6 @@ const TicketForm = () => {
           {formik.touched.description && formik.errors.description ? <div className="text-red-500">{formik.errors.description}</div> : null}
         </div>
 
-        {/* Priority Dropdown */}
         <div className="mb-4">
           <label htmlFor="priority" className="block">Priority</label>
           <select
@@ -130,7 +115,6 @@ const TicketForm = () => {
           {formik.touched.priority && formik.errors.priority ? <div className="text-red-500">{formik.errors.priority}</div> : null}
         </div>
 
-        {/* Category Dropdown */}
         <div className="mb-4">
           <label htmlFor="category" className="block">Category</label>
           <select
@@ -149,7 +133,6 @@ const TicketForm = () => {
           {formik.touched.category && formik.errors.category ? <div className="text-red-500">{formik.errors.category}</div> : null}
         </div>
 
-        {/* File Upload */}
         <div className="mb-4">
           <label htmlFor="attachment" className="block">Attachment</label>
           <input
@@ -161,7 +144,6 @@ const TicketForm = () => {
           />
         </div>
 
-        {/* Contact Email Field */}
         <div className="mb-4">
           <label htmlFor="email" className="block">Email</label>
           <input
@@ -176,7 +158,6 @@ const TicketForm = () => {
           {formik.touched.email && formik.errors.email ? <div className="text-red-500">{formik.errors.email}</div> : null}
         </div>
 
-        {/* Phone Field */}
         <div className="mb-4">
           <label htmlFor="phone" className="block">Phone</label>
           <input
@@ -191,7 +172,6 @@ const TicketForm = () => {
           {formik.touched.phone && formik.errors.phone ? <div className="text-red-500">{formik.errors.phone}</div> : null}
         </div>
 
-        {/* Start Date Field */}
         <div className="mb-4">
           <label htmlFor="startDate" className="block">Start Date</label>
           <input
@@ -206,7 +186,6 @@ const TicketForm = () => {
           {formik.touched.startDate && formik.errors.startDate ? <div className="text-red-500">{formik.errors.startDate}</div> : null}
         </div>
 
-        {/* Due Date Field */}
         <div className="mb-4">
           <label htmlFor="dueDate" className="block">Due Date</label>
           <input
@@ -221,7 +200,6 @@ const TicketForm = () => {
           {formik.touched.dueDate && formik.errors.dueDate ? <div className="text-red-500">{formik.errors.dueDate}</div> : null}
         </div>
 
-        {/* Urgent Checkbox */}
         <div className="mb-4">
           <label htmlFor="isUrgent" className="block">Urgent</label>
           <input
@@ -236,7 +214,6 @@ const TicketForm = () => {
           <span>Is this an urgent issue?</span>
         </div>
 
-        {/* Acceptance Radio */}
         <div className="mb-4">
           <label className="block">Accept Terms & Conditions</label>
           <input
@@ -263,7 +240,7 @@ const TicketForm = () => {
         </div>
 
         <div className="mb-4">
-          <button type="submit" className="bg-blue-500 text-white p-2 rounded w-full">
+          <button type="submit" className="bg-violet-500 text-white p-2 rounded w-full">
             Submit
           </button>
         </div>

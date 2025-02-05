@@ -1,41 +1,35 @@
 import { useState } from "react";
-import { auth, db } from "../firebaseConfig";  // Firebase configuration
-import { createUserWithEmailAndPassword } from "firebase/auth";  // Firebase Authentication
-import { setDoc, doc } from "firebase/firestore";  // Firestore functions
-
+import { auth, db } from "../firebaseConfig";  
+import { createUserWithEmailAndPassword } from "firebase/auth";  
+import { setDoc, doc } from "firebase/firestore"; 
 const Register = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [role, setRole] = useState("customer"); // Default role is 'customer'
+  const [role, setRole] = useState("customer"); 
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
   const handleRegister = async (e) => {
     e.preventDefault();
-    setError("");  // Reset any previous error messages
-    setLoading(true);  // Start loading indicator
-
+    setError(""); 
+    setLoading(true);  
     try {
-      // Firebase method to register the user
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
       console.log("User registered:", userCredential.user);
 
-      // Get user ID from Firebase Authentication
       const userId = userCredential.user.uid;
 
-      // Store user info in Firestore
       await setDoc(doc(db, "users", userId), {
         email,
-        role,  // Assign the selected role (customer/admin)
+        role,  
       });
 
       console.log("User added to Firestore with role:", role);
       alert("Registration successful!");
       
-      // Reset the form
       setEmail("");
       setPassword("");
-      setRole("customer"); // Reset role to default
+      setRole("customer"); 
       setLoading(false);
 
     } catch (error) {
@@ -68,7 +62,6 @@ const Register = () => {
           required
         />
         
-        {/* Role selection */}
         <div className="mb-4">
           <label className="block mb-2">Select Role</label>
           <select
